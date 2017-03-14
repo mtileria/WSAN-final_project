@@ -17,6 +17,7 @@ void setup() {
 }
 
 void loop() { 
+///////////////////////////////TEST CODE /////////////
   while (Serial.available()) {
     // get the new byte:
     char inChar = (char)Serial.read();
@@ -36,6 +37,7 @@ void loop() {
      inputString = "";    
     }
   }
+///////////////////////////////////////////////////////////  
   
   if (xbee.available()) { 
   //Serial.print("Serial1 RCV:");
@@ -86,21 +88,21 @@ void write_xbee(){
       //Serial2.println("ATWR");   
       wait_for_ack();
       //Serial.println();
-      Serial.println("------- ATWR finished--------");
+      //Serial.println("------- ATWR finished--------");
     
       delay(AT_delay);
       xbee.println("ATAC");
       //Serial2.println("ATAC");   
       wait_for_ack();
       //Serial.println();
-      Serial.println("------- ATAC finished--------");  
+      //Serial.println("------- ATAC finished--------");  
     
       delay(AT_delay);
       xbee.println("ATCN");
       //Serial2.println("ATCN");   
       wait_for_ack();
-      Serial.println();
-      Serial.println("------- ATCN finished--------"); 
+      //Serial.println();
+      //Serial.println("------- ATCN finished--------"); 
 
 }
 
@@ -111,25 +113,25 @@ void set_dest_addr(String addr){
         //Serial2.println("ATDL" + addr);   
         wait_for_ack();
         //Serial.println();
-        Serial.println("------- ATDH done 0 "); 
+        //Serial.println("------- ATDH done 0 "); 
         delay(AT_delay);                
         xbee.println("ATDL0");
         //Serial2.println("ATDL" + addr);   
         wait_for_ack();
         //Serial.println();
-        Serial.println("------- ATDL done 0"); 
+        //Serial.println("------- ATDL done 0"); 
      }else {
         xbee.println("ATDH13A200");
         //Serial2.println("ATDL" + addr);   
         wait_for_ack();
-        Serial.println();
-        Serial.println("------- ATDH done 13A200"); 
+        //Serial.println();
+        //Serial.println("------- ATDH done 13A200"); 
         delay(AT_delay);                
         xbee.println("ATDL" + addr);
         //Serial2.println("ATDL" + addr);   
         wait_for_ack();
-        Serial.println();
-        Serial.println("------- ATDL done " + addr);      
+        //Serial.println();
+        //Serial.println("------- ATDL done " + addr);      
      }
 
 }
@@ -141,37 +143,6 @@ void TX(String msg, String addr){
      }
      write_xbee(); 
      xbee.println(msg + "%");
-}
-
-String recv_data(){
-  if (xbee.available()) { 
-  //Serial.print("Serial1 RCV:");
-  while (xbee.available()) {     // If anything comes in Serial2 (pins 0 & 1)
-          //Serial.write(xbee.read());   // read it and send it out Serial (USB)
-          // get the new byte:
-          char inChar = (char)xbee.read();
-          // add it to the inputString:
-          recvString += inChar;
-          // if the incoming character is a newline, set a flag
-          // so the main loop can do something about it:
-          if (inChar == '%') {
-              Serial.println("GOT >> " + recvString.substring(0,recvString.length()-1));
-           recvString = "";    
-          }              
-     }        
-  } 
-
-}
-
-void flashLed(int pin, int times, int wait) {
-  for (int i = 0; i < times; i++) {
-    digitalWrite(pin, HIGH);
-    delay(wait);
-    digitalWrite(pin, LOW);
-    if (i + 1 < times) {
-      delay(wait);
-    }
-  }
 }
 
 void wait_for_ack(){  
