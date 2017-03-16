@@ -1,0 +1,104 @@
+
+void loop() {
+  Serial.println("iteration " + String(count));
+
+  if (count == next) {
+    // send message to neighbor
+    index = get_neighbor(n);
+    TX_dest_addr = neighbors[index];
+    buffer_TX = "M" + My_ID + "0";
+    Serial.println("Sending to:" + TX_dest_addr + " data:" + buffer_TX);
+    TX(buffer_TX, TX_dest_addr);
+    // start the timer
+    start_timer = true;
+    startTime = millis();
+    delay(200);
+
+    bool waiting = true;
+    while (waiting) {
+      if (xbee.available()) {
+        while (xbee.available()) {
+          char inChar = (char) xbee.read();
+          recvString += inChar;
+          if (inChar == '%') {
+            Serial.println("GOT >> " + recvString.substring(0, recvString.length() - 1));
+            procString = recvString.substring(0, recvString.length() - 1);
+            type = procString.substring(0, 1);
+            source_addr = procString.substring(1, 3);
+
+            if (type == "A") {
+              rec_addr = procString.substring(1, 3);
+              rec_data = procString.substring(3, 4);
+              rec_block = procString.substring(4, 6);
+              if (rec_addr == TX_dest_addr) {
+                Serial.println("got msg within time");
+                Serial.println("Reciever Ack: " + rec_addr);
+                Serial.println("Reciever data: " + rec_data);
+                Serial.println("Reciever block: " + rec_block);
+                block = "0";
+                change_state(rec_data.toInt());
+                Serial.println("I update my colour: ");
+              }
+            }
+            procString = "";
+            recvString = "";
+          }
+
+        }      // end while xbee is available
+      }       // end of if xbee.availbale()
+      currentTime = millis();
+      if (currentTime - startTime > time_out_constant) {
+        waiting = false;
+        Serial.println("Timeout waiting ACK");
+
+      }
+
+
+    } // end while waiting
+    next  = nextTime(rate_parameter);
+    Serial.println("next poisson " + String(next));
+    count = 0;
+
+    /*
+      If it is not an active slot,
+      I am going to listen if I have an request from other nodes
+    */
+  } else {
+    count++;
+    delay(200);
+    if (xbee.available()) {
+      while (xbee.available()) {
+        //Serial.write(xbee.read());
+        // get the new byte:
+        char inChar = (char) xbee.read();
+        // add it to the inputString:
+        recvString += inChar;
+        // if the incoming character is a newline, set a flag
+        // so the main loop can do something about it:
+        //Serial.print(inChar);
+        if (inChar == '%') {
+          Serial.println("GOT >> " + recvString.substring(0, recvString.length() - 1));
+          procString = recvString.substring(0, recvString.length() - 1);
+          type = procString.substring(0, 1);
+          source_addr = procString.substring(1, 3);
+
+          if (type == "M") {
+            //data = procString.substring(3,4);
+            block = procString.substring(3, 4);
+            Serial.println("Source is: " + source_addr);
+            //Serial.println("data is: " + data);
+            Serial.println("block is: " + block);
+
+            buffer_RX = "A" + My_ID + String(state) + "B0";
+            TX(buffer_RX, source_addr);
+          }
+
+          procString = "";
+          recvString = "";
+        }
+      }
+    }
+  }
+
+
+} // end of main void loop
