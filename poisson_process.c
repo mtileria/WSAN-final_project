@@ -17,7 +17,7 @@ int counter = 0;
 boolean start_timer = false;
 String My_ID = "3C";
 //String rec_ID = "34";
-String neighbors [3] = {"71","34"};
+String neighbors [2] = {"71","34"};
 
 //String neighbors [3] = {"71","3C"};
 //String neighbors [3] = {"34","3C"};
@@ -82,7 +82,7 @@ void loop() {
     
 
     if (count == next){
-      printf("%d iteration \n", count);
+       Serial.println("iteration " + String(count));
       // send message to neighbor
       index = get_neighbor(n);
       TX_dest_addr = neighbors[index];
@@ -93,7 +93,7 @@ void loop() {
       start_timer = true;
       startTime = millis(); 
       next  = nextTime(rate_parameter);
-      printf("%d next poisson \n", next);
+      Serial.println("next poisson " + String(next));
       count = 0;
       delay(200);
     }else{
@@ -101,31 +101,6 @@ void loop() {
       delay(200);
     }
     
-
-
-//    while (Serial.available()) {
-//      // get the new byte:
-//      char inChar = (char) Serial.read();
-//      // add it to the inputString:
-//      inputString += inChar;
-//      // if the incoming character is a newline, set a flag
-//      // so the main loop can do something about it:
-//      if (inChar == '\n') {
-//        if (inputString.startsWith("send:")) {
-//          int len = inputString.length();
-//          TX_dest_addr = "34";
-//          buffer_TX = "M" + My_ID + "0";
-//          Serial.println("Sending to:" + TX_dest_addr + " data:" + buffer_TX);
-//
-//          TX(buffer_TX, TX_dest_addr); // message sending
-//          start_timer = true;
-//          startTime = millis(); // time start     
-//          block = 1; //1 means timer is running, 0 means time is timed out!          
-//        }
-//        inputString = "";
-//      }
-//    }
-    ///////////////////////////////////////////////////////////  
 
     if (xbee.available()) {
       //Serial.print("Serial1 RCV:");
