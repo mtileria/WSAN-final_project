@@ -242,6 +242,19 @@ void set_dest_addr(String addr){
         wait_for_ack();
         //Serial.println();
         //Serial.println("------- ATDL done 0"); 
+    }else if (addr.startsWith("C2")){
+        delay(AT_delay);
+        xbee.println("ATDH13A200");
+        //Serial2.println("ATDL" + addr);   
+        wait_for_ack();
+        //Serial.println();
+        //Serial.println("------- ATDH done 0 "); 
+        delay(AT_delay);                
+        xbee.println("ATDL414F7FC2");
+        //Serial2.println("ATDL" + addr);   
+        wait_for_ack();
+        //Serial.println();
+        //Serial.println("------- ATDL done 0"); 
      }else {
         xbee.println("ATDH13A200");
         //Serial2.println("ATDL" + addr);   
