@@ -16,22 +16,26 @@ String block = "";
 boolean active_mode = false;   // Normally every node is in inActive mode
 
 int counter = 0;
-boolean start_timer = false;
+boolean start_timer = false; //for calculating time between message send and received
 
         
 
 String My_ID = "34";
-//int const n = 5;   // complete tolology
-//String neighbors [n] = {"CC", "3E","3D","34","3C"}; // for complete node
+//Complete connected tology
+//int const n = 5;   
+//String neighbors [n] = {"CC", "3E","3D","34","3C"}; 
 
-//int const n= 1;    // line topology
+// line topology
+//int const n= 1;    
 //String neighbors [n]={"3C"};
 
-//int const n = 2;   // ring topology
-//String neighbors [n] = {"3C","3D"}; // for complete node
+ // ring topology
+//int const n = 2;  
+//String neighbors [n] = {"3C","3D"};
 
-int const n = 2;   // grid  topology
-String neighbors [n] = {"3C","C2"}; // for complete node
+// grid  topology
+int const n = 2;   
+String neighbors [n] = {"3C","C2"};
 
 
 
@@ -218,14 +222,14 @@ void write_xbee(){
       //Serial.println("------- ATWR finished--------");
     
       delay(AT_delay);
-      xbee.println("ATAC");
+      xbee.println("ATAC");// Apply changes
       //Serial2.println("ATAC");   
       wait_for_ack();
       //Serial.println();
       //Serial.println("------- ATAC finished--------");  
     
       delay(AT_delay);
-      xbee.println("ATCN");
+      xbee.println("ATCN");//exit command mode
       //Serial2.println("ATCN");   
       wait_for_ack();
       //Serial.println();
